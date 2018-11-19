@@ -1,6 +1,7 @@
 from constants import *
 from functions import *
 from Side import *
+from Gui import *
 
 class Cube:
     def __init__(self):
@@ -9,40 +10,14 @@ class Cube:
         #list of sides
         self.sides = []
 
-        #make 6 single-color 9-sticker sides, with colors being represented by letters a-f
+        #make 6 single-color 9-sticker sides, with colors being represented by numbers 0-5
         for i in range(6):
-            c = chr(i + 97) #letters a-f
-            new_side = Side(c)
+            new_side = Side(i) #make a side of the current color (represented by i)
             self.sides.append(new_side)
 
-    def print_cube(self):
-
-        def print_sides(start, end):
-            #prints multiple sides in a single line
-            for j in range(3):
-                for k in range(start, end):
-                    for i in range(3):
-                        print(self.sides[k].get_sticker(j, i), end = " ")
-                    print("  ", end = " ")
-                print()
-            print()
-
-        def print_side_with_space(side_number):
-            #prints a single side in a line, with space before it
-            for j in range(3):
-                print(8*" ", end = " ")
-                for i in range(3):
-                    print(self.sides[side_number].get_sticker(j, i), end = " ")
-                print()
-            print()
-
-        #print side 0 on one line, then sides 1-3 on the next, then side 4 and 5
-        print()
-        print_side_with_space(0)
-        print_sides(1, 4)
-        print_side_with_space(4)
-        print_side_with_space(5)
-        print()
+    def open_window(self):
+        #open the GUI window!
+        gui = Gui(self)
 
     def rotate_stickers(self, sticker_coordinates_list):
         #rotates 4 stickers around on the cube right-ward
@@ -88,80 +63,6 @@ class Cube:
             z = sticker_coordinates_list[i][2]
             new_color = corner_colors[i]
             self.sides[x].change_sticker(y, z, new_color)
-
-    def front_test(self):
-
-        #numbers for the current side's up, left, self, right, down sides
-        u, l, s, r, d = 0, 1, 2, 3, 4
-
-        #rotate the stickers on the current side
-        self.rotate_stickers([[s, 0, 0], [s, 0, 2], [s, 2, 2], [s, 2, 0]])
-        self.rotate_stickers([[s, 0, 1], [s, 1, 2], [s, 2, 1], [s, 1, 0]])
-
-        #rotate the stickers on the non-current side
-        for i in range(3):
-            j = 2 - i
-            self.rotate_stickers([[u, 2, i], [r, i, 0], [d, 0, j], [l, j, 2]])
-
-    def right_test(self):
-
-        #numbers for the current side's up, left, self, right, down sides
-        u, l, s, r, d = 2, 4, 3, 0, 5
-
-        #rotate the stickers on the current side
-        self.rotate_stickers([[s, 0, 0], [s, 0, 2], [s, 2, 2], [s, 2, 0]])
-        self.rotate_stickers([[s, 0, 1], [s, 1, 2], [s, 2, 1], [s, 1, 0]])
-
-        #rotate the stickers on the non-current side
-        for i in range(3):
-            j = 2 - i
-            self.rotate_stickers([[u, 2, i], [r, i, 0], [d, 0, j], [l, j, 2]])
-
-    #DEFINE RELATIONSHIPS BETWEEN ALL THE SIDES: WHO IS WHOSE UP, WHO IS WHOSE DOWN, LEFT, RIGHT, ETC
-
-
-    '''
-    def right_inverted(self):
-    def left(self):
-    def left_inverted(self):
-    def up(self):
-    def up_inverted(self):
-    def down(self):
-    def down_inverted(self):
-    def front(self):
-    def front_inverted(self):
-    def back(self):
-    def back_inverted(self):
-    '''
-
-    '''
-    side 2:
-        above:
-            side 2 top->
-            side 0 bottom
-        below:
-            side 2 bottom->
-            side 4 top
-        left:
-            side 2 left->
-            side 1 right
-        right:
-            side 2 right->
-            side 3 left
-    '''
-    '''
-        initialize_side_relationships():
-            #initialize sides with who is on whose side
-
-            #side 2 has 0 above, 
-            assign_adjacent_sides(2, 0, 4, 1, 3, 5)
-    '''
-    
-    def front(self):
-        self.rotate_whole_side(2)
-
-    def right(self):
-        self.rotate_whole_side(3)
 
     def rotate_whole_side(self, side_number):
         #rotates a side's face and all the adjacent sides as well
@@ -224,6 +125,7 @@ class Cube:
         }
 
         return rows_columns.get(side_number)
+
     def get_down_side_row(self, side_number):
 
         #dictionary of the different rows/column coordinates that are below each side
